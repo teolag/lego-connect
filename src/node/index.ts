@@ -1,5 +1,5 @@
 import * as noble from "@abandonware/noble";
-import { Hub, LEGO_HUB_SERVICE_UUID, MOVE_HUB_ID, INCOMING_MESSAGE, OUTGOING_MESSAGE, DISCONNECT } from "./index";
+import { Hub, LEGO_HUB_SERVICE_UUID, MOVE_HUB_ID, INCOMING_MESSAGE, OUTGOING_MESSAGE, DISCONNECT } from "../lib/index";
 import { EventEmitter } from "events";
 EventEmitter.defaultMaxListeners = 20
 
@@ -65,7 +65,6 @@ function onHubConnected(callback: (hub: Hub) => void) {
   onConnectedCallback = callback
 } 
 
-export * from './index'
 export {
   hubs,
   scanForHubs,

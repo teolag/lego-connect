@@ -1,8 +1,8 @@
 import { expect } from "chai";
-import { DeviceType, Port } from "../src/types";
-import { FakeHub } from "../src/hubs/FakeHub";
-import { TachoMotor } from "../src/devices/TachoMotor";
-import { LEDLights } from "../src/devices/LEDLights";
+import { DeviceType, Port } from "../src/lib/types";
+import { FakeHub } from "../src/lib/hubs/FakeHub";
+import { TachoMotor } from "../src/lib/devices/TachoMotor";
+import { LEDLights } from "../src/lib/devices/LEDLights";
 
 let hub: FakeHub
 beforeEach('connect to fake hub', async () => {

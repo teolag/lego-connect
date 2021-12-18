@@ -1,4 +1,4 @@
-import { LEGO_HUB_SERVICE_UUID, LEGO_CHARACTERISTIC_UUID, HubRGBColor, Port, MessageType, INCOMING_MESSAGE, OUTGOING_MESSAGE, DISCONNECT, Hub } from "./index";
+import { LEGO_HUB_SERVICE_UUID, LEGO_CHARACTERISTIC_UUID, HubRGBColor, Port, MessageType, INCOMING_MESSAGE, OUTGOING_MESSAGE, DISCONNECT, Hub } from "../lib/index";
 // EventEmitter.defaultMaxListeners = 20
 
 let outbox: {data, collection, resolve, reject}[] = []
@@ -63,7 +63,6 @@ function processOutbox(characteristic: BluetoothRemoteGATTCharacteristic) {
     })
 }
 
-export * from './index'
 export {
   scanForHubs,
   HubRGBColor,

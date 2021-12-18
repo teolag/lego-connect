@@ -2,14 +2,12 @@
   "name": "lego-connect",
   "version": "1.1.23",
   "description": "LEGO BLE library for node and browsers",
-  "main": "dist/src/index.js",
-  "types": "dist/src/index.d.ts",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "scripts": {
-    "build": "tsc -p tsconfig-build.json",
+    "build": "tsc -p ./tsconfig-build.json",
     "test": "mocha -r ts-node/register tests/**/*.test.ts"
   },
-  "author": "Teodor Lagerqvist",
-  "license": "ISC",
   "devDependencies": {
     "@types/chai": "^4.3.0",
     "@types/mocha": "^9.0.0",
@@ -22,5 +20,23 @@
   "dependencies": {
     "@abandonware/noble": "^1.9.2-15",
     "@types/web-bluetooth": "^0.0.11"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/teolag/lego-connect.git"
+  },
+  "keywords": [
+    "lego",
+    "BLE",
+    "boost"
+  ],
+  "author": "Teodor Lagerqvist",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/teolag/lego-connect/issues"
+  },
+  "homepage": "https://github.com/teolag/lego-connect#readme",
+  "files": [
+    "/dist"
+  ]
 }
