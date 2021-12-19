@@ -23,7 +23,11 @@ export enum DistanceColorModes {
   CALIBRATION = 0x0a
 }
 
-export type DistanceColorRGBData = { r: number; g: number; b: number };
+export type DistanceColorRGBData = {
+  r: number;
+  g: number;
+  b: number;
+};
 
 export enum LedColor {
   OFF = 0x00,

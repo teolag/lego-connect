@@ -1,25 +1,35 @@
-export const HUB_ID = 0x00 // Not in use, Always set to 0x00 (zero)
-export const LEGO_HUB_SERVICE_UUID = '00001623-1212-efde-1623-785feabcd123'
-export const LEGO_CHARACTERISTIC_UUID = '00001624-1212-efde-1623-785feabcd123'
-export const MOVE_HUB_ID = 64
+export const HUB_ID = 0x00; // Not in use, Always set to 0x00 (zero)
+export const LEGO_HUB_SERVICE_UUID = '00001623-1212-efde-1623-785feabcd123';
+export const LEGO_CHARACTERISTIC_UUID = '00001624-1212-efde-1623-785feabcd123';
+export const MOVE_HUB_ID = 64;
 
-export type SendFunction = (messageType: MessageType, data: Buffer, category?: OutputCategory, port?: Port) => Promise<void>
+export type SendFunction = (
+  messageType: MessageType,
+  data: Buffer,
+  category?: OutputCategory,
+  port?: Port
+) => Promise<void>;
 
 export interface IConnectionInterface {
-  onData: (callback: (buffer: Buffer) => void) => void,
-  write: (buffer: Buffer, category?: string, port?: Port) => Promise<void>,
-  onDisconnect: (callback) => void
+  onData: (callback: (buffer: Buffer) => void) => void;
+  write: (buffer: Buffer, category?: string, port?: Port) => Promise<void>;
+  onDisconnect: (callback) => void;
 }
 
-export const INCOMING_MESSAGE = 'INCOMING_MESSAGE'
-export const OUTGOING_MESSAGE = 'OUTGOING_MESSAGE'
-export const DISCONNECT = 'DISCONNECT'
+export const INCOMING_MESSAGE = 'INCOMING_MESSAGE';
+export const OUTGOING_MESSAGE = 'OUTGOING_MESSAGE';
+export const DISCONNECT = 'DISCONNECT';
 
 export enum OutputCategory {
   CHANGE_COLOR = 'CHANGE_COLOR',
-  RUN_MOTOR = "RUN_MOTOR",
-  CHANGE_BRIGHTNESS = "CHANGE_BRIGHTNESS"
+  RUN_MOTOR = 'RUN_MOTOR',
+  CHANGE_BRIGHTNESS = 'CHANGE_BRIGHTNESS'
 }
+
+export type SubscriptionData = {
+  mode: number;
+  buffer: Uint8Array;
+};
 
 export enum MessageType {
   HUB_PROPERTIES = 0x01,
@@ -38,7 +48,7 @@ export enum MessageType {
   PORT_OUTPUT_FEEDBACK = 0x82
 }
 
-export enum ErrorType{
+export enum ErrorType {
   ACK = 0x01,
   MACK = 0x02,
   BUFFER_OVERFLOW = 0x03,
@@ -46,7 +56,7 @@ export enum ErrorType{
   COMMAND_NOT_RECOGNIZED = 0x05,
   INVALID_USE = 0x06,
   OVERCURRENT = 0x07,
-  INTERNAL_ERROR = 0x08,
+  INTERNAL_ERROR = 0x08
 }
 
 export enum InformationType {
@@ -72,9 +82,9 @@ export enum Port {
   D = 0x03,
   AB = 0x10,
   RGB_LIGHT = 0x32,
-  TILT_SENSOR = 0x3A,
-  INTERNAL_1 = 0x3B, // Ampere port
-  INTERNAL_2 = 0x3C, // Voltage port
+  TILT_SENSOR = 0x3a,
+  INTERNAL_1 = 0x3b, // Ampere port
+  INTERNAL_2 = 0x3c, // Voltage port
   INTERNAL_3 = 0x46 // gives no readings? joo [5, 0, 69, 70, 0]
 }
 
@@ -91,8 +101,6 @@ export enum DeviceType {
   UNKNOWN_DEVICE = 0x0042 // Unknown
 }
 
-
-
 export enum AttachEventType {
   DETACHED = 0x00,
   ATTACHED = 0x01,
@@ -106,12 +114,11 @@ export enum ActionTypes {
   HUB_WILL_DISCONNECT = 0x31
 }
 
-
 export enum SubCommands {
   MOTOR_START_POWER = 0x01,
   MOTOR_START_POWER_MULTI = 0x02,
-  SET_ACCELERATION_TIME= 0x05,
-  SET_DECELERATION_TIME= 0x06,
+  SET_ACCELERATION_TIME = 0x05,
+  SET_DECELERATION_TIME = 0x06,
   MOTOR_START_SPEED = 0x07,
   MOTOR_START_SPEED_FOR_TIME = 0x09,
   MOTOR_START_SPEED_FOR_DEGREES = 0x0b,
@@ -120,8 +127,8 @@ export enum SubCommands {
 }
 
 export interface ICommandOptions {
-  useBuffer?: boolean
-  sendFeedback?: boolean
+  useBuffer?: boolean;
+  sendFeedback?: boolean;
 }
 
 export enum MotorEndState {
@@ -132,13 +139,13 @@ export enum MotorEndState {
 
 export enum OutputFeedback {
   COMMAND_IN_PROGRESS = 0x01, // Buffer Empty + Command In Progress
-  COMMAND_COMPLETED = 0x02,   // Buffer Empty + Command Completed
-  CURRENT_DISCARDED = 0x04,   // Current Command(s) Discarded
-  IDLE = 0x08,                // Idle
-  BUSY_FULL = 0x10,           // Busy/Full
+  COMMAND_COMPLETED = 0x02, // Buffer Empty + Command Completed
+  CURRENT_DISCARDED = 0x04, // Current Command(s) Discarded
+  IDLE = 0x08, // Idle
+  BUSY_FULL = 0x10, // Busy/Full
   // Combined:
-  ONE_DONE = 0x03, 
-  CONFLICT = 0x05, 
-  DONE = 0x0A, // 0x0A = 10 = 2 + 8 = Buffer Empty + Command Completed + Idle
-  DISCARDED = 0x0E // 0x0E = 14 = 2 + 4 + 8 = Buffer Empty + Command Completed + Current command discarded + Idle
+  ONE_DONE = 0x03,
+  CONFLICT = 0x05,
+  DONE = 0x0a, // 0x0A = 10 = 2 + 8 = Buffer Empty + Command Completed + Idle
+  DISCARDED = 0x0e // 0x0E = 14 = 2 + 4 + 8 = Buffer Empty + Command Completed + Current command discarded + Idle
 }
