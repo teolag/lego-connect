@@ -63,7 +63,8 @@ export enum InformationType {
   ADVERTISING_NAME = 0x01,
   BUTTON_STATE = 0x02,
   BATTERY_VOLTAGE_PERCENT = 0x06,
-  RADIO_FIRMWARE_VERSION = 0x09
+  RADIO_FIRMWARE_VERSION = 0x09,
+  SYSTEM_TYPE_ID = 0x0b
 }
 
 export enum PropertyOperations {
