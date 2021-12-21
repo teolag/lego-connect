@@ -111,7 +111,7 @@ export class Hub extends EventEmitter {
 
       case MessageType.PORT_OUTPUT_FEEDBACK: {
         const port1 = getPort(buffer)
-        const device1 = this.ports.get(port1)!
+        const device1 = this.requireDeviceByPort(port1)
         const feedback: OutputFeedback = buffer.readUInt8(4)
         const bufferEmpty = (feedback & 0b00011) > 0
         const commandInProgress = (feedback & 0b00001) > 0
@@ -149,7 +149,7 @@ export class Hub extends EventEmitter {
       case MessageType.PORT_INFORMATION: {
         const port = getPort(buffer)
         const infoType = buffer.readUInt8(4)
-        const device = this.ports.get(port)
+        const device = this.requireDeviceByPort(port)
 
         if (infoType === 0x01) {
           const capabilitiesInt = buffer.readUInt8(5)
@@ -162,7 +162,7 @@ export class Hub extends EventEmitter {
           const inputModes = bitmask2Modes(buffer.readUInt16LE(7))
           const outputModes = bitmask2Modes(buffer.readUInt16LE(9))
 
-          device!.emit('portInfo', {
+          device.emit('portInfo', {
             capabilities,
             modesCount,
             inputModes,
@@ -170,9 +170,9 @@ export class Hub extends EventEmitter {
           })
         } else if (infoType === 0x02) {
           if (buffer.length === 5) {
-            device!.emit('portModeCombinations', [])
+            device.emit('portModeCombinations', [])
           } else if (buffer.length === 7) {
-            device!.emit('portModeCombinations', bitmask2Modes(buffer.readUInt16LE(5)))
+            device.emit('portModeCombinations', bitmask2Modes(buffer.readUInt16LE(5)))
           } else {
             console.warn('Oj oj oj så mycket modes?', buffer.length, dumpBuffer(buffer))
           }
@@ -189,41 +189,41 @@ export class Hub extends EventEmitter {
 
       case MessageType.PORT_MODE_INFORMATION: {
         const port = getPort(buffer)
-        const device = this.ports.get(port)
+        const device = this.requireDeviceByPort(port)
         const mode = buffer.readUInt8(4)
         const modeInformationType = buffer.readUInt8(5)
         const key = 'mode' + mode + 'info' + modeInformationType
 
         if (modeInformationType === 0) {
           const name = String.fromCharCode(...Array.from(buffer.slice(6)).filter(code => code > 0))
-          device!.emit(key, name)
+          device.emit(key, name)
         } else if (modeInformationType === 0x01) {
           const raw = {
             min: buffer.readFloatLE(6),
             max: buffer.readFloatLE(10)
           }
-          device!.emit(key, raw)
+          device.emit(key, raw)
         } else if (modeInformationType === 0x02) {
           const percent = {
             min: buffer.readFloatLE(6),
             max: buffer.readFloatLE(10)
           }
-          device!.emit(key, percent)
+          device.emit(key, percent)
         } else if (modeInformationType === 0x03) {
           const si = {
             min: buffer.readFloatLE(6),
             max: buffer.readFloatLE(10)
           }
-          device!.emit(key, si)
+          device.emit(key, si)
         } else if (modeInformationType === 0x04) {
           const symbol = String.fromCharCode(...Array.from(buffer.slice(6)).filter(code => code > 0))
-          device!.emit(key, symbol)
+          device.emit(key, symbol)
         } else if (modeInformationType === 0x80) {
           const numValues = buffer.readUInt8(6)
           const dataType = ['8bit', '16bit', '32bit', 'float'][buffer.readUInt8(7)]
           const totalFigures = buffer.readUInt8(8)
           const decimals = buffer.readUInt8(9)
-          device!.emit(key, { numValues, dataType, totalFigures, decimals })
+          device.emit(key, { numValues, dataType, totalFigures, decimals })
         } else {
           console.log('PORT_MODE_INFORMATION', {
             port,
@@ -242,14 +242,14 @@ export class Hub extends EventEmitter {
 
       case MessageType.SENSOR_READING: {
         const port = getPort(buffer)
-        const device = this.ports.get(port)!
+        const device = this.requireDeviceByPort(port)
         device.emit('sensorReading', buffer)
         break
       }
 
       case MessageType.SUBSCRIPTION_ACKNOWLEDGEMENTS: {
         const port = getPort(buffer)
-        const device = this.ports.get(port)!
+        const device = this.requireDeviceByPort(port)
         const mode = buffer.readUInt8(4)
         device.emit('subscribed', { mode, buffer })
         break
@@ -292,7 +292,7 @@ export class Hub extends EventEmitter {
         else if (firstThreeBytes === 0b010) systemType = 'LEGO System'
         else if (firstThreeBytes === 0b011) systemType = 'LEGO System'
 
-        let deviceType = `Unknown device type [${lastFiveBytes.toString(2)}]`
+        const deviceType = `Unknown device type [${lastFiveBytes.toString(2)}]`
         if (firstThreeBytes === 0b000 && lastFiveBytes === 0b00000) systemType = 'WeDo Hub'
         else if (firstThreeBytes === 0b001 && lastFiveBytes === 0b00000) systemType = 'Duplo Train'
         else if (firstThreeBytes === 0b010 && lastFiveBytes === 0b00000) systemType = 'Boost Hub'
@@ -312,6 +312,12 @@ export class Hub extends EventEmitter {
     }
   }
 
+  private requireDeviceByPort(port: Port) {
+    const device = this.ports.get(port)
+    if (!device) throw Error('No device found on port ' + port)
+    return device
+  }
+
   private addOrRemoveDevice(buffer: Buffer) {
     const port = getPort(buffer)
     const device = this.ports.get(port)
@@ -324,7 +330,7 @@ export class Hub extends EventEmitter {
       }
     } else if (attachEvent === AttachEventType.ATTACHED || attachEvent === AttachEventType.ATTACHED_VIRTUAL) {
       const deviceType = getDeviceType(buffer)
-      const virtual = attachEvent === AttachEventType.ATTACHED_VIRTUAL
+      // const virtual = attachEvent === AttachEventType.ATTACHED_VIRTUAL
       const device = createDevice(this, port, deviceType)
       if (!device) return
       this.ports.set(port, device)

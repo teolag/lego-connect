@@ -1,24 +1,19 @@
-export const HUB_ID = 0x00; // Not in use, Always set to 0x00 (zero)
-export const LEGO_HUB_SERVICE_UUID = '00001623-1212-efde-1623-785feabcd123';
-export const LEGO_CHARACTERISTIC_UUID = '00001624-1212-efde-1623-785feabcd123';
-export const MOVE_HUB_ID = 64;
+export const HUB_ID = 0x00 // Not in use, Always set to 0x00 (zero)
+export const LEGO_HUB_SERVICE_UUID = '00001623-1212-efde-1623-785feabcd123'
+export const LEGO_CHARACTERISTIC_UUID = '00001624-1212-efde-1623-785feabcd123'
+export const MOVE_HUB_ID = 64
 
-export type SendFunction = (
-  messageType: MessageType,
-  data: Buffer,
-  category?: OutputCategory,
-  port?: Port
-) => Promise<void>;
+export type SendFunction = (messageType: MessageType, data: Buffer, category?: OutputCategory, port?: Port) => Promise<void>
 
 export interface IConnectionInterface {
-  onData: (callback: (buffer: Buffer) => void) => void;
-  write: (buffer: Buffer, category?: string, port?: Port) => Promise<void>;
-  onDisconnect: (callback) => void;
+  onData: (callback: (buffer: Buffer) => void) => void
+  write: (buffer: Buffer, category?: string, port?: Port) => Promise<void>
+  onDisconnect: (callback) => void
 }
 
-export const INCOMING_MESSAGE = 'INCOMING_MESSAGE';
-export const OUTGOING_MESSAGE = 'OUTGOING_MESSAGE';
-export const DISCONNECT = 'DISCONNECT';
+export const INCOMING_MESSAGE = 'INCOMING_MESSAGE'
+export const OUTGOING_MESSAGE = 'OUTGOING_MESSAGE'
+export const DISCONNECT = 'DISCONNECT'
 
 export enum OutputCategory {
   CHANGE_COLOR = 'CHANGE_COLOR',
@@ -27,9 +22,9 @@ export enum OutputCategory {
 }
 
 export type SubscriptionData = {
-  mode: number;
-  buffer: Uint8Array;
-};
+  mode: number
+  buffer: Uint8Array
+}
 
 export enum MessageType {
   HUB_PROPERTIES = 0x01,
@@ -128,8 +123,8 @@ export enum SubCommands {
 }
 
 export interface ICommandOptions {
-  useBuffer?: boolean;
-  sendFeedback?: boolean;
+  useBuffer?: boolean
+  sendFeedback?: boolean
 }
 
 export enum MotorEndState {
