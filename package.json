@@ -1,6 +1,6 @@
 {
   "name": "lego-connect",
-  "version": "1.2.8",
+  "version": "1.2.9",
   "description": "LEGO BLE library for node and browsers",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
