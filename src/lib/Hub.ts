@@ -292,12 +292,12 @@ export class Hub extends EventEmitter {
         else if (firstThreeBytes === 0b010) systemType = 'LEGO System'
         else if (firstThreeBytes === 0b011) systemType = 'LEGO System'
 
-        const deviceType = `Unknown device type [${lastFiveBytes.toString(2)}]`
-        if (firstThreeBytes === 0b000 && lastFiveBytes === 0b00000) systemType = 'WeDo Hub'
-        else if (firstThreeBytes === 0b001 && lastFiveBytes === 0b00000) systemType = 'Duplo Train'
-        else if (firstThreeBytes === 0b010 && lastFiveBytes === 0b00000) systemType = 'Boost Hub'
-        else if (firstThreeBytes === 0b010 && lastFiveBytes === 0b00001) systemType = '2 Port Hub'
-        else if (firstThreeBytes === 0b010 && lastFiveBytes === 0b00010) systemType = '2 Port Handset'
+        let deviceType = `Unknown device type [${lastFiveBytes.toString(2)}]`
+        if (firstThreeBytes === 0b000 && lastFiveBytes === 0b00000) deviceType = 'WeDo Hub'
+        else if (firstThreeBytes === 0b001 && lastFiveBytes === 0b00000) deviceType = 'Duplo Train'
+        else if (firstThreeBytes === 0b010 && lastFiveBytes === 0b00000) deviceType = 'Boost Hub'
+        else if (firstThreeBytes === 0b010 && lastFiveBytes === 0b00001) deviceType = '2 Port Hub'
+        else if (firstThreeBytes === 0b010 && lastFiveBytes === 0b00010) deviceType = '2 Port Handset'
         this.emit(key, { systemType, deviceType })
         break
       }
