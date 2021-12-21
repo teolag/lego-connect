@@ -38,19 +38,19 @@ export class Hub extends EventEmitter {
   }
 
   public getAdvertisingName() {
-    return this.getHubInformation(InformationType.ADVERTISING_NAME)
+    return this.getHubInformation<string>(InformationType.ADVERTISING_NAME)
   }
 
   public getFirmwareVersion() {
-    return this.getHubInformation(InformationType.RADIO_FIRMWARE_VERSION)
+    return this.getHubInformation<string>(InformationType.RADIO_FIRMWARE_VERSION)
   }
 
   public getSystemType() {
-    return this.getHubInformation(InformationType.SYSTEM_TYPE_ID)
+    return this.getHubInformation<{ systemType: string; deviceType: string }>(InformationType.SYSTEM_TYPE_ID)
   }
 
   public getBatteryPercent() {
-    return this.getHubInformation(InformationType.BATTERY_VOLTAGE_PERCENT)
+    return this.getHubInformation<number>(InformationType.BATTERY_VOLTAGE_PERCENT)
   }
 
   public subscribeToBattery(callback) {
@@ -67,9 +67,9 @@ export class Hub extends EventEmitter {
     this.send(Buffer.from([MessageType.HUB_PROPERTIES, informationType, PropertyOperations.ENABLE_UPDATES]))
   }
 
-  private getHubInformation(informationType: InformationType) {
+  private getHubInformation<T>(informationType: InformationType): Promise<T> {
     const key = 'getInformation' + informationType
-    return new Promise<string>(resolve => {
+    return new Promise<T>(resolve => {
       this.once(key, resolve)
       this.send(Buffer.from([MessageType.HUB_PROPERTIES, informationType, PropertyOperations.REQUEST_UPDATE]))
     })
@@ -110,6 +110,7 @@ export class Hub extends EventEmitter {
       }
 
       case MessageType.PORT_OUTPUT_FEEDBACK: {
+        // https://lego.github.io/lego-ble-wireless-protocol-docs/index.html#port-output-command-feedback-format
         const port1 = getPort(buffer)
         const device1 = this.requireDeviceByPort(port1)
         const feedback: OutputFeedback = buffer.readUInt8(4)
@@ -119,19 +120,7 @@ export class Hub extends EventEmitter {
         const commandDiscarded = (feedback & 0b00100) > 0
         const idle = (feedback & 0b01000) > 0
         const buzyFull = (feedback & 0b10000) > 0
-        /*
-        1:	Buffer Empty + Command In Progress
-        2:	Buffer Empty + Command Completed
-        4:	Current Command(s) Discarded
-        8:	Idle
-        16: Busy/Full
-  
-        1 = 1 = 1 = 
-        5 = 5 = 1 + 4 = Command in progress + Current command discarded
-        0a = 10 = 2 + 8 = Command completed + Idle
-        0e = 14 = 8 + 4 + 2 = Idle, Discarded, Command completed
-        10 = 16 = Buzy
-        */
+
         device1.emit('OutputFeedback', {
           feedback,
           bufferEmpty,
