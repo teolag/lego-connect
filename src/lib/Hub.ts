@@ -281,6 +281,26 @@ export class Hub extends EventEmitter {
         this.emit(key, version)
         break
       }
+      case InformationType.SYSTEM_TYPE_ID: {
+        const byte = buffer.readUInt8(5)
+        const firstThreeBytes = byte >> 5
+        const lastFiveBytes = byte & 0b00011111
+
+        let systemType = `Unknown system type [${firstThreeBytes.toString(2)}]`
+        if (firstThreeBytes === 0b000) systemType = 'LEGO Wedo 2.0'
+        else if (firstThreeBytes === 0b001) systemType = 'LEGO Duplo'
+        else if (firstThreeBytes === 0b010) systemType = 'LEGO System'
+        else if (firstThreeBytes === 0b011) systemType = 'LEGO System'
+
+        let deviceType = `Unknown device type [${lastFiveBytes.toString(2)}]`
+        if (firstThreeBytes === 0b000 && lastFiveBytes === 0b00000) systemType = 'WeDo Hub'
+        else if (firstThreeBytes === 0b001 && lastFiveBytes === 0b00000) systemType = 'Duplo Train'
+        else if (firstThreeBytes === 0b010 && lastFiveBytes === 0b00000) systemType = 'Boost Hub'
+        else if (firstThreeBytes === 0b010 && lastFiveBytes === 0b00001) systemType = '2 Port Hub'
+        else if (firstThreeBytes === 0b010 && lastFiveBytes === 0b00010) systemType = '2 Port Handset'
+        this.emit(key, { systemType, deviceType })
+        break
+      }
       case InformationType.BUTTON_STATE: {
         const state = buffer.readUInt8(5)
         this.emit(key, state)
