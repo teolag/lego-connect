@@ -4,7 +4,7 @@ import { Device } from '../Device'
 
 export class LEDLights extends Device {
   constructor(hub: Hub, port: Port) {
-    super(hub, port, DeviceType.LED_LIGHTS)
+    super(hub, port, DeviceType.LED_LIGHTS, 'LED lights')
   }
 
   public setBrightness(brightness: number, options?: ICommandOptions) {

@@ -23,7 +23,7 @@ export enum HubRGBMode {
 
 export class HubRGB extends Device {
   constructor(hub: Hub, port: Port) {
-    super(hub, port, DeviceType.HUB_RGB)
+    super(hub, port, DeviceType.HUB_RGB, 'Hub RGB LED')
   }
 
   public setColor(color: HubRGBColor, options?: ICommandOptions) {

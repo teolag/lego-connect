@@ -9,7 +9,7 @@ import { Hub } from '../Hub'
 
 export class CurrentSensor extends Device {
   constructor(hub: Hub, port: Port) {
-    super(hub, port, DeviceType.CURRENT_SENSOR)
+    super(hub, port, DeviceType.CURRENT_SENSOR, 'Current sensor')
   }
 
   public parseSensorReading(buffer: Buffer /*, mode: number*/) {

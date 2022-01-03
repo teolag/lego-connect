@@ -7,6 +7,8 @@ import { TiltSensor } from './devices/InternalTiltSensor'
 import { DistanceColorSensor } from './devices/DistanceColorSensor'
 import { VoltageSensor } from './devices/VoltageSensor'
 import { CurrentSensor } from './devices/CurrentSensor'
+import { UnknownDevice } from './devices/UnknownDevice'
+import { Device } from './Device'
 
 export const toHexStr = (dec: number) => '0x' + dec.toString(16).padStart(2, '0')
 export const dumpBuffer = (buffer: Buffer) => Array.from(buffer).map(toHexStr)
@@ -56,14 +58,14 @@ export function bitmask2Modes(value: number) {
     .filter(v => v !== null)
 }
 
-export function createDevice(hub: Hub, port: Port, deviceType: DeviceType) {
+export function createDevice(hub: Hub, port: Port, deviceType: DeviceType): Device | undefined {
   switch (deviceType) {
     case DeviceType.HUB_RGB:
       return new HubRGB(hub, port)
     case DeviceType.EXTERNAL_TACHO_MOTOR:
-      return new TachoMotor(hub, port, deviceType)
+      return new TachoMotor(hub, port, deviceType, 'External tacho motor')
     case DeviceType.INTERNAL_TACHO_MOTOR:
-      return new TachoMotor(hub, port, deviceType)
+      return new TachoMotor(hub, port, deviceType, 'Internal tacho motor')
     case DeviceType.INTERNAL_TILT_SENSOR:
       return new TiltSensor(hub, port)
     case DeviceType.DISTANCE_COLOR_SENSOR:
@@ -74,9 +76,11 @@ export function createDevice(hub: Hub, port: Port, deviceType: DeviceType) {
       return new VoltageSensor(hub, port)
     case DeviceType.CURRENT_SENSOR:
       return new CurrentSensor(hub, port)
+    case DeviceType.UNKNOWN_DEVICE:
+      return new UnknownDevice(hub, port)
     default: {
       console.warn('No device created for', DeviceType[deviceType], toHexStr(deviceType))
-      return null
+      return undefined
     }
   }
 }

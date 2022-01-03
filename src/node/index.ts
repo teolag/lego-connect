@@ -1,7 +1,7 @@
 import * as noble from '@abandonware/noble'
 import { Hub, LEGO_HUB_SERVICE_UUID, MOVE_HUB_ID, INCOMING_MESSAGE, OUTGOING_MESSAGE, DISCONNECT } from '../lib/index'
 import { EventEmitter } from 'events'
-EventEmitter.defaultMaxListeners = 20
+EventEmitter.defaultMaxListeners = 48
 
 let onConnectedCallback
 const hubs: Hub[] = []
@@ -29,7 +29,7 @@ async function hubFound(peripheral: noble.Peripheral) {
 
     if (onConnectedCallback) onConnectedCallback(hub)
   } else {
-    // console.log("Found unknown device", peripheral.advertisement, peripheral.uuid)
+    console.log('Found unknown device', peripheral.advertisement, peripheral.uuid)
   }
 }
 
@@ -39,7 +39,7 @@ function scanForHubs() {
   noble.on('scanStop', () => console.log('Stop scanning'))
   noble.on('stateChange', state => {
     // possible state values: "unknown", "resetting", "unsupported", "unauthorized", "poweredOff", "poweredOn"
-    if (state === 'poweredOn') noble.startScanningAsync()
+    if (state === 'poweredOn') noble.startScanningAsync([LEGO_HUB_SERVICE_UUID])
     else console.log('noble not ready', state)
   })
 }

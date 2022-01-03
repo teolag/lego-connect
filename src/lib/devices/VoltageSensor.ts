@@ -7,7 +7,7 @@ import { Hub } from '../Hub'
 
 export class VoltageSensor extends Device {
   constructor(hub: Hub, port: Port) {
-    super(hub, port, DeviceType.VOLTAGE_SENSOR)
+    super(hub, port, DeviceType.VOLTAGE_SENSOR, 'Voltage sensor')
   }
 
   public parseSensorReading(buffer: Buffer /*, mode: number*/) {

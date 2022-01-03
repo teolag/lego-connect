@@ -5,12 +5,14 @@ import { dumpPort, dumpBuffer } from './utils'
 
 export abstract class Device extends EventEmitter {
   protected hub: Hub
+  public name: string
   public port: Port
   public type: DeviceType
   private mode = 0
 
-  constructor(hub: Hub, port: Port, type: DeviceType) {
+  constructor(hub: Hub, port: Port, type: DeviceType, name: string) {
     super()
+    this.name = name
     this.type = type
     this.hub = hub
     this.port = port
@@ -40,7 +42,7 @@ export abstract class Device extends EventEmitter {
     return this.mode
   }
 
-  public async getPortInformation() {
+  public async getPortInformation(includeModeInfo = true) {
     const [portInformation, combinations] = await Promise.all([
       new Promise<object>(resolve => {
         this.once('portInfo', resolve)
@@ -53,7 +55,7 @@ export abstract class Device extends EventEmitter {
     ])
 
     const uniqueModes = Array.from<number>(new Set(portInformation['inputModes'].concat(portInformation['outputModes']))).sort()
-    const modes = await Promise.all(uniqueModes.map(mode => this.getModeInformation(mode)))
+    const modes = includeModeInfo ? await Promise.all(uniqueModes.map(mode => this.getModeInformation(mode))) : undefined
 
     return { portInformation, combinations, uniqueModes, modes }
   }

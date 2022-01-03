@@ -16,8 +16,8 @@ export enum MotorModes {
 }
 
 export class TachoMotor extends Device {
-  constructor(hub: Hub, port: Port, type: DeviceType) {
-    super(hub, port, type)
+  constructor(hub: Hub, port: Port, type: DeviceType, name: string) {
+    super(hub, port, type, name)
   }
 
   public parseSensorReading(buffer: Buffer, mode: MotorModes) {

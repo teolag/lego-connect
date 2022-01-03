@@ -53,7 +53,7 @@ export class Hub extends EventEmitter {
     return this.getHubInformation<number>(InformationType.BATTERY_VOLTAGE_PERCENT)
   }
 
-  public subscribeToBattery(callback) {
+  public subscribeToBattery(callback: (battery: number) => void) {
     this.subscribeToHubProperty(InformationType.BATTERY_VOLTAGE_PERCENT, callback)
   }
 
@@ -61,9 +61,13 @@ export class Hub extends EventEmitter {
     this.subscribeToHubProperty(InformationType.BUTTON_STATE, callback)
   }
 
-  private subscribeToHubProperty(informationType: InformationType, callback) {
+  public subscribeToDevices(callback: (device: Device) => void) {
+    this.on('deviceConnected', callback)
+  }
+
+  private subscribeToHubProperty<T>(informationType: InformationType, callback: (value: T) => void) {
     const key = 'getInformation' + informationType
-    this.on(key, callback)
+    this.on(key, callback as () => T)
     this.send(Buffer.from([MessageType.HUB_PROPERTIES, informationType, PropertyOperations.ENABLE_UPDATES]))
   }
 

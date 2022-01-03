@@ -39,7 +39,7 @@ export enum LedColor {
 
 export class DistanceColorSensor extends Device {
   constructor(hub: Hub, port: Port) {
-    super(hub, port, DeviceType.DISTANCE_COLOR_SENSOR)
+    super(hub, port, DeviceType.DISTANCE_COLOR_SENSOR, 'Distance color sensor')
   }
 
   public setColor(color: LedColor, options?: ICommandOptions) {
