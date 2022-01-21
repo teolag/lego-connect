@@ -10,7 +10,8 @@
     "test": "mocha -r ts-node/register tests/**/*.test.ts",
     "lint": "eslint 'src/**/*.ts' --ignore-pattern node_modules/",
     "lint:fix": "npm run lint -- --fix",
-    "prettier": "prettier --write ./src"
+    "prettier": "prettier --write ./src",
+    "release": "npm version minor && npm run build && npm publish"
   },
   "devDependencies": {
     "@types/chai": "^4.3.0",
