@@ -74,4 +74,18 @@ export class TachoMotor extends Device {
     message.writeUInt16LE(time, 1)
     return this.sendCommand(message)
   }
+
+  public setPower(power: number) {
+    const message = Buffer.from([SubCommands.MOTOR_START_POWER, 0x00])
+    message.writeInt8(power, 1)
+    return this.sendCommand(message)
+  }
+
+  public stop() {
+    this.setPower(0)
+  }
+
+  public break() {
+    this.setPower(127)
+  }
 }
