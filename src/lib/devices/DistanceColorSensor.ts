@@ -58,16 +58,16 @@ export class DistanceColorSensor extends Device {
       case DistanceColorModes.COLOR_DISTANCE: {
         const color = buffer.readUInt8(4)
         const distance = buffer.readUInt8(5)
-        const distance2 = buffer.readUInt8(7)
-        let millimeters = 0
-        if (distance2 > 0) {
-          millimeters = Math.floor(20 - distance2 * 2.85)
-        } else if (distance > 9) {
-          millimeters = Infinity
-        } else {
-          millimeters = Math.floor(20 + distance * 18)
+        const partial = buffer.readUInt8(7)
+
+        let length = distance
+        if (partial > 0) {
+          length = distance + 1.0 / partial
         }
-        return { color, distance, millimeters }
+
+        const millimeters = Math.floor(length * 25.4) - 20
+
+        return { color, millimeters }
       }
       case DistanceColorModes.RGB: {
         const rgb: DistanceColorRGBData = {
