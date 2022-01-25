@@ -61,8 +61,8 @@ export class DistanceColorSensor extends Device {
         const partial = buffer.readUInt8(7)
 
         let length = distance
-        if (partial > 0) {
-          length = distance + 1.0 / partial
+        if (distance === 1 && partial > 0) {
+          length = 1 / partial
         }
 
         const millimeters = Math.floor(length * 25.4) - 20
