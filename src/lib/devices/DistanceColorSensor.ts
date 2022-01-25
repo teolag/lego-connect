@@ -65,9 +65,9 @@ export class DistanceColorSensor extends Device {
           length = 1 / partial
         }
 
-        const millimeters = Math.floor(length * 25.4) - 20
+        const millimeters = Math.floor(length * 25.4)
 
-        return { color, millimeters }
+        return { color, distance, partial, millimeters }
       }
       case DistanceColorModes.RGB: {
         const rgb: DistanceColorRGBData = {
